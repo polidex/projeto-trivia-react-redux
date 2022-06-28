@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -18,7 +19,11 @@ class Login extends React.Component {
   handleClick = () => {
     fetch('https://opentdb.com/api_token.php?command=request')
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then(({ token }) => {
+        const { history } = this.props;
+        localStorage.setItem('token', token);
+        history.push('/game');
+      });
   }
 
   validateLogin = () => {
@@ -69,5 +74,11 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Login;
