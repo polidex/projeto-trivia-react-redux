@@ -33,6 +33,7 @@ class Login extends React.Component {
 
   render() {
     const { email, name } = this.state;
+    const { history } = this.props;
     return (
       <>
         {/* <header className="App-header">
@@ -54,7 +55,7 @@ class Login extends React.Component {
               type="email"
               className="email-input"
               data-testid="input-gravatar-email"
-              placeholder="email"
+              placeholder="e-mail"
               name="email"
               value={ email }
               onChange={ this.handleChange }
@@ -70,6 +71,13 @@ class Login extends React.Component {
             PLAY
           </button>
         </section>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ () => history.push('/settings') }
+        >
+          SETTINGS
+        </button>
       </>
     );
   }
