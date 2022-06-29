@@ -2,6 +2,7 @@ import React from 'react';
 // import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
+import './Game.css';
 
 class Game extends React.Component {
   constructor() {
@@ -10,6 +11,7 @@ class Game extends React.Component {
     this.state = {
       results: [],
       index: 0,
+      classInfo: false,
     };
   }
 
@@ -29,12 +31,19 @@ class Game extends React.Component {
       });
   }
 
+  handleClick = () => {
+    this.setState({ classInfo: true });
+  }
+
   getElements = (item) => {
+    const { classInfo } = this.state;
     const arr = [
       <button
         type="button"
         key="correct-answer"
         data-testid="correct-answer"
+        className={ classInfo ? 'correct-answer' : '' }
+        onClick={ this.handleClick }
       >
         {item.correct_answer}
       </button>,
@@ -44,6 +53,8 @@ class Game extends React.Component {
         key={ `wrong-answer-${index}` }
         type="button"
         data-testid={ `wrong-answer-${index}` }
+        className={ classInfo ? 'wrong-answer' : '' }
+        onClick={ this.handleClick }
       >
         {answer}
       </button>,
@@ -53,12 +64,15 @@ class Game extends React.Component {
   }
 
   trueOrFalse = (item) => {
+    const { classInfo } = this.state;
     const arr = [];
     arr.push(
       <button
         type="button"
         data-testid="wrong-answer-0"
         key="wrong-answer-0"
+        className={ classInfo ? 'wrong-answer' : '' }
+        onClick={ this.handleClick }
       >
         {item.incorrect_answers[0]}
       </button>,
@@ -68,6 +82,8 @@ class Game extends React.Component {
         type="button"
         data-testid="correct-answer"
         key="correct-answer"
+        className={ classInfo ? 'correct-answer' : '' }
+        onClick={ this.handleClick }
       >
         {item.correct_answer}
       </button>,
