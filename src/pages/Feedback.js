@@ -21,7 +21,7 @@ class Feedback extends React.Component {
   render() {
     const { hash } = this.state;
     const { name, score, assertions } = this.props;
-    const number = 3;
+    const number = 3; // magic
     return (
       <main>
         <h1>Feedback</h1>
