@@ -71,7 +71,7 @@ describe('Testando o component Login', () => {
     await waitFor(() => {
       const { location: { pathname } } = history;
       expect(pathname).toBe('/game');
-    }, { timeout: 1500 });
+    }, { timeout: 1500 }); //add timeout
   });
 
   it('Verificando o funcionamento do botão de settings', () => {
