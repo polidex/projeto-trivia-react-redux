@@ -88,5 +88,4 @@ describe('Testando o component Login', () => {
     expect(titleEl).toBeInTheDocument();
   });
 
-
 });

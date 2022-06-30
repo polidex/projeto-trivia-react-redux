@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { saveUserInfo } from '../redux/actions';
 // import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -20,7 +22,8 @@ class Login extends React.Component {
     fetch('https://opentdb.com/api_token.php?command=request')
       .then((response) => response.json())
       .then(({ token }) => {
-        const { history } = this.props;
+        const { history, dispatch } = this.props;
+        dispatch(saveUserInfo(this.state));
         localStorage.setItem('token', token);
         history.push('/game');
       });
@@ -87,6 +90,7 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default Login;
+export default connect()(Login);

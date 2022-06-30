@@ -3,7 +3,7 @@ import { SAVE_USER_INFO } from '../actions';
 const INITIAL_STATE = {
   name: '',
   assertions: '',
-  score: '',
+  score: 0,
   gravatarEmail: '',
 };
 
@@ -12,7 +12,8 @@ const player = (state = INITIAL_STATE, action) => {
   case SAVE_USER_INFO:
     return {
       ...state,
-      ...action.payload,
+      name: action.payload.name,
+      gravatarEmail: action.payload.email,
     };
   default:
     return state;
