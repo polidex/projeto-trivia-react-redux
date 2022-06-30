@@ -25,10 +25,18 @@ class Game extends React.Component {
 
   componentDidUpdate() {
     const { timer, index } = this.state;
-    const { history } = this.props;
+    const { history, name, picture, score } = this.props;
+    const player = { name, picture, score };
     const maxIndex = 5;
     if (timer === 0) clearInterval(this.intervalID);
-    if (index === maxIndex) history.push('/feedback');
+    if (index === maxIndex) {
+      if (!localStorage.getItem('ranking')) {
+        localStorage.setItem('ranking', JSON.stringify([]));
+      }
+      const playerInfo = JSON.parse(localStorage.getItem('ranking'));
+      localStorage.setItem('ranking', JSON.stringify([...playerInfo, player]));
+      history.push('/feedback');
+    }
   }
 
   componentWillUnmount() {
@@ -173,6 +181,15 @@ Game.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  picture: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
-export default connect()(Game);
+const mapStateToProps = (state) => ({
+  name: state.player.name,
+  picture: state.player.url,
+  score: state.player.score,
+});
+
+export default connect(mapStateToProps)(Game);

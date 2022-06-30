@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveUserInfo } from '../redux/actions';
+import { resetStore, saveUserInfo } from '../redux/actions';
 // import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -12,6 +12,11 @@ class Login extends React.Component {
       name: '',
       email: '',
     };
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(resetStore());
   }
 
   handleChange = ({ target: { value, name } }) => {
