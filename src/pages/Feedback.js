@@ -20,10 +20,11 @@ class Feedback extends React.Component {
 
   render() {
     const { hash } = this.state;
-    const { name, score } = this.props;
+    const { name, score, assertions } = this.props;
+    const number = 3;
     return (
       <main>
-        <h1 data-testid="feedback-text">Feedback</h1>
+        <h1>Feedback</h1>
         <div>
           <img
             src={ `https://www.gravatar.com/avatar/${hash}` }
@@ -40,6 +41,9 @@ class Feedback extends React.Component {
           >
             {score}
           </p>
+          <p data-testid="feedback-text">
+            {assertions < number ? 'Could be better...' : 'Well Done!'}
+          </p>
         </div>
       </main>
     );
@@ -50,12 +54,14 @@ Feedback.propTypes = {
   score: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   gravatarEmail: PropTypes.string.isRequired,
+  assertions: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   name: state.player.name,
   gravatarEmail: state.player.gravatarEmail,
   score: state.player.score,
+  assertions: state.player.assertions,
 });
 
 export default connect(mapStateToProps)(Feedback);

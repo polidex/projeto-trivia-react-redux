@@ -89,12 +89,6 @@ class Game extends React.Component {
   }
 
   handleNext = () => {
-    // this.setState((prev) => ({
-    //   index: prev.index + 1,
-    //   classInfo: false,
-    //   timer: 30,
-    //   nextButton: false,
-    // }));
     this.setState((prev) => ({
       index: prev.index + 1,
       classInfo: false,
