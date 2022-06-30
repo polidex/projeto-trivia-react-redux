@@ -5,7 +5,7 @@ import Header from '../components/Header';
 
 class Feedback extends React.Component {
   render() {
-    const { assertions, score } = this.props;
+    const { assertions, score, history } = this.props;
     const number = 3;
     return (
       <main>
@@ -34,6 +34,13 @@ class Feedback extends React.Component {
             pontos!
           </p>
         </div>
+        <button
+          type="button"
+          onClick={ () => history.push('/') }
+          data-testid="btn-play-again"
+        >
+          Play Again
+        </button>
       </main>
     );
   }
@@ -42,6 +49,9 @@ class Feedback extends React.Component {
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({
