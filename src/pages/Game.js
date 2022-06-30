@@ -12,10 +12,24 @@ class Game extends React.Component {
       results: [],
       index: 0,
       classInfo: false,
+      timer: 30,
     };
   }
 
   componentDidMount() {
+    const ONE_SECOND = 1000;
+    this.fetchQuestion();
+    this.intervalID = setInterval(() => this.setState((prev) => ({
+      timer: prev.timer - 1,
+    })), ONE_SECOND);
+  }
+
+  componentDidUpdate() {
+    const { timer } = this.state;
+    if (timer === 0) clearInterval(this.intervalID);
+  }
+
+  fetchQuestion = () => {
     const token = localStorage.getItem('token');
     fetch(`https://opentdb.com/api.php?amount=5&token=${token}`)
       .then((response) => response.json())
@@ -27,7 +41,13 @@ class Game extends React.Component {
           history.push('/');
         }
         const { results } = data;
-        this.setState({ results });
+        const n = 0.5;
+        const shuffledResults = results.map((item) => ({
+          ...item,
+          shuffledQuestions: [...item.incorrect_answers, item.correct_answer]
+            .sort(() => Math.random() - n),
+        }));
+        this.setState({ results: shuffledResults });
       });
   }
 
@@ -35,70 +55,17 @@ class Game extends React.Component {
     this.setState({ classInfo: true });
   }
 
-  getElements = (item) => {
-    const { classInfo } = this.state;
-    const arr = [
-      <button
-        type="button"
-        key="correct-answer"
-        data-testid="correct-answer"
-        className={ classInfo ? 'correct-answer' : '' }
-        onClick={ this.handleClick }
-      >
-        {item.correct_answer}
-      </button>,
-    ];
-    item.incorrect_answers.forEach((answer, index) => arr.push(
-      <button
-        key={ `wrong-answer-${index}` }
-        type="button"
-        data-testid={ `wrong-answer-${index}` }
-        className={ classInfo ? 'wrong-answer' : '' }
-        onClick={ this.handleClick }
-      >
-        {answer}
-      </button>,
-    ));
-    const n = 0.5;
-    return arr.sort(() => Math.random() - n);
-  }
-
-  trueOrFalse = (item) => {
-    const { classInfo } = this.state;
-    const arr = [];
-    arr.push(
-      <button
-        type="button"
-        data-testid="wrong-answer-0"
-        key="wrong-answer-0"
-        className={ classInfo ? 'wrong-answer' : '' }
-        onClick={ this.handleClick }
-      >
-        {item.incorrect_answers[0]}
-      </button>,
-    );
-    arr.push(
-      <button
-        type="button"
-        data-testid="correct-answer"
-        key="correct-answer"
-        className={ classInfo ? 'correct-answer' : '' }
-        onClick={ this.handleClick }
-      >
-        {item.correct_answer}
-      </button>,
-    );
-    const n = 0.5;
-    return arr.sort(() => Math.random() - n);
-  }
-
   render() {
-    const { results } = this.state;
-    const { index } = this.state;
+    const { results, classInfo, index, timer } = this.state;
     return (
       <>
         <Header />
         <section>
+          <p>
+            Timer:
+            {' '}
+            {timer}
+          </p>
           {results.length
           && (
             results.map((item, itemIndex) => {
@@ -108,9 +75,34 @@ class Game extends React.Component {
                     <p data-testid="question-category">{item.category}</p>
                     <p data-testid="question-text">{item.question}</p>
                     <div data-testid="answer-options">
-                      {item.type === 'boolean'
-                        ? this.trueOrFalse(item).map((tag) => tag)
-                        : this.getElements(item).map((button) => button)}
+                      {item.shuffledQuestions.map((question, qIndex) => {
+                        if (item.correct_answer === question) {
+                          return (
+                            <button
+                              type="button"
+                              data-testid="correct-answer"
+                              key="correct-answer"
+                              className={ classInfo ? 'correct-answer' : '' }
+                              onClick={ this.handleClick }
+                              disabled={ timer === 0 }
+                            >
+                              {question}
+                            </button>
+                          );
+                        }
+                        return (
+                          <button
+                            key={ `wrong-answer-${qIndex}` }
+                            type="button"
+                            data-testid={ `wrong-answer-${qIndex}` }
+                            className={ classInfo ? 'wrong-answer' : '' }
+                            onClick={ this.handleClick }
+                            disabled={ timer === 0 }
+                          >
+                            {question}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 );
