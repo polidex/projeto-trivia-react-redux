@@ -15,6 +15,7 @@ class Game extends React.Component {
       classInfo: false,
       timer: 30,
       nextButton: false,
+      disabled: false,
     };
   }
 
@@ -28,7 +29,9 @@ class Game extends React.Component {
     const { history, name, picture, score } = this.props;
     const player = { name, picture, score };
     const maxIndex = 5;
-    if (timer === 0) clearInterval(this.intervalID);
+    if (timer === 0) {
+      clearInterval(this.intervalID);
+    }
     if (index === maxIndex) {
       if (!localStorage.getItem('ranking')) {
         localStorage.setItem('ranking', JSON.stringify([]));
@@ -45,9 +48,15 @@ class Game extends React.Component {
 
   intervalFunc = () => {
     const ONE_SECOND = 1000;
-    this.intervalID = setInterval(() => this.setState((prev) => ({
-      timer: prev.timer - 1,
-    })), ONE_SECOND);
+    this.intervalID = setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 1) {
+        this.setState({ disabled: true, nextButton: true });
+      }
+      this.setState((prev) => ({
+        timer: prev.timer - 1,
+      }));
+    }, ONE_SECOND);
   }
 
   fetchQuestion = () => {
@@ -74,7 +83,8 @@ class Game extends React.Component {
 
   handleClick = (answer, dif) => {
     const { timer } = this.state;
-    this.setState({ classInfo: true, nextButton: true, timer: 0 });
+    clearInterval(this.intervalID);
+    this.setState({ classInfo: true, nextButton: true, disabled: true });
     const { dispatch } = this.props;
     if (answer === 'right') {
       const points = 10;
@@ -102,11 +112,12 @@ class Game extends React.Component {
       classInfo: false,
       timer: 30,
       nextButton: false,
+      disabled: false,
     }), () => this.intervalFunc());
   }
 
   render() {
-    const { results, classInfo, index, timer, nextButton } = this.state;
+    const { results, classInfo, index, timer, nextButton, disabled } = this.state;
     return (
       <>
         <Header />
@@ -134,7 +145,7 @@ class Game extends React.Component {
                               key="correct-answer"
                               className={ classInfo ? 'correct-answer' : '' }
                               onClick={ () => this.handleClick('right', item.difficulty) }
-                              disabled={ timer === 0 }
+                              disabled={ disabled }
                             >
                               {question}
                             </button>
@@ -147,7 +158,7 @@ class Game extends React.Component {
                             data-testid={ `wrong-answer-${qIndex}` }
                             className={ classInfo ? 'wrong-answer' : '' }
                             onClick={ () => this.handleClick('wrong') }
-                            disabled={ timer === 0 }
+                            disabled={ disabled }
                           >
                             {question}
                           </button>
