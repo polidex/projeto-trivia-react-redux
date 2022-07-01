@@ -4,7 +4,7 @@ import renderWithRouterAndRedux from './renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 
-describe('Testando o component Login', () => {
+describe('Testando o componente Login', () => {
 
   it('Verificando se inputs e botões estão presentes na tela', () => {
     renderWithRouterAndRedux(<App />);
