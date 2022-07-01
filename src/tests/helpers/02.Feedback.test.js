@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import renderWithRouterAndRedux from './renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   }
 };
 
-describe('Testando o componente Feedback', () => {
+describe('Testando a página Feedback', () => {
 
   it('Verificando se os elementos estão na tela', () => {
     renderWithRouterAndRedux(<App />, INITIAL_STATE, '/feedback');

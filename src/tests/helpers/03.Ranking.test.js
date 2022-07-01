@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import renderWithRouterAndRedux from './renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   }
 };
 
-describe('Testando o componente Ranking', () => {
+describe('Testando a página Ranking', () => {
 
   it('Verificando se os elementos estão na tela', () => {
     const { history } = renderWithRouterAndRedux(<App />);
@@ -26,10 +26,10 @@ describe('Testando o componente Ranking', () => {
     localStorage.setItem('ranking', JSON.stringify(localStorageMock));
 
     history.push('/ranking');
+    expect(localStorage.getItem).toHaveBeenCalled();
 
     const title = screen.getByTestId('ranking-title');
     expect(title).toBeInTheDocument();
-    expect(localStorage.getItem).toHaveBeenCalled();
 
     localStorageMock.forEach((player, index) => {
       const name = screen.getByTestId(`player-name-${index}`);
